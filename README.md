@@ -14,6 +14,10 @@ The REST tests are written in postman and are too in project root folder
 
 I went with the code first approach, the WSDL is auto-generated from Java.
 
+## SOAP Client
+
+The soap client is put in to the test class src/test/java/app.SOAP/LibraryServiceTest
+
 ## Not working?
 
 If you get class not found errors, be sure that the maven dependencies are copied to the output path.
