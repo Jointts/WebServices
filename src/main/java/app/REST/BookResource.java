@@ -1,16 +1,14 @@
 package app.REST;
 
 import app.Models.Book;
-import app.SOAP.LibraryService;
+import app.SOAP.LibraryServiceImpl;
 import io.swagger.annotations.*;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
-import java.util.List;
 
-import static app.SOAP.LibraryService.isAuthorized;
+import static app.SOAP.LibraryServiceImpl.isAuthorized;
 import static java.lang.String.format;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -23,11 +21,11 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Produces(APPLICATION_JSON)
 public class BookResource {
 
-    private LibraryService libraryService;
+    private LibraryServiceImpl libraryServiceImpl;
 
     // The constructor is required at all times since it needs to have Exception handling on instantiation
     public BookResource() throws ParseException {
-        libraryService = new LibraryService();
+        libraryServiceImpl = new LibraryServiceImpl();
     }
 
     @ApiOperation(value = "Get all Books")
@@ -41,7 +39,7 @@ public class BookResource {
     public Response getBook(@ApiParam(value = "Authorization token", required = true) @QueryParam("token") String token,
                             @ApiParam(value = "Book id filter") @PathParam("id") Long id) {
         if (isAuthorized(token)) {
-            return Response.status(Response.Status.OK).entity(libraryService.getBook(token, id)).build();
+            return Response.status(Response.Status.OK).entity(libraryServiceImpl.getBook(token, id)).build();
         }
         return Response.status(Response.Status.FORBIDDEN).entity(format("Token is invalid: %s", token)).build();
     }
@@ -58,7 +56,7 @@ public class BookResource {
                                 @ApiParam(value = "Book author(id) filter") @QueryParam("author") long author,
                                 @ApiParam(value = "Book publisher filter") @QueryParam("publisher") String publisher) {
         if (isAuthorized(token)) {
-            return Response.status(Response.Status.OK).entity(libraryService.getAllBooks(token, title, author, publisher)).build();
+            return Response.status(Response.Status.OK).entity(libraryServiceImpl.getAllBooks(token, title, author, publisher)).build();
         }
         return Response.status(Response.Status.FORBIDDEN).entity(format("Token is invalid: %s", token)).build();
     }
@@ -74,7 +72,7 @@ public class BookResource {
     public Response addBook(@ApiParam(value = "Authorization token", required = true) @QueryParam("token") String token,
                             @ApiParam(value = "Book object to create", required = true) Book book) {
         if (isAuthorized(token)) {
-            return Response.status(Response.Status.CREATED).entity(libraryService.addBook(token, book)).build();
+            return Response.status(Response.Status.CREATED).entity(libraryServiceImpl.addBook(token, book)).build();
         }
         return Response.status(Response.Status.FORBIDDEN).entity(format("Token is invalid: %s", token)).build();
     }
@@ -91,7 +89,7 @@ public class BookResource {
     public Response getBooksWithSpecificAuthor(@ApiParam(value = "Authorization token", required = true) @QueryParam("token") String token,
                                                @ApiParam(value = "Authors name(first and last) to filter", required = true) @QueryParam("author") String author) {
         if (isAuthorized(token)) {
-            return Response.status(Response.Status.CREATED).entity(libraryService.getBooksWithSpecificAuthor(token, author)).build();
+            return Response.status(Response.Status.CREATED).entity(libraryServiceImpl.getBooksWithSpecificAuthor(token, author)).build();
         }
         return Response.status(Response.Status.FORBIDDEN).entity(format("Token is invalid: %s", token)).build();
     }
